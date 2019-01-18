@@ -11,45 +11,54 @@ class App extends Component {
   };
 
   handleSearch = (e) => {
-      const value = e.target.value
-      const keyCode = e.which || e.keyCode
-      const ENTER = 13
-      if (keyCode === ENTER) {
-        axios.get(`https://api.github.com/users/${value}`)
-          .then((result) => {
-            this.setState({ 
-              userInfo: {
-                username: result.data.name,
-                photo: result.data.avatar_url,
-                login: result.data.login,
-                repos: result.data.public_repos,
-                followers: result.data.followers,
-                following: result.data.following,
-              },
-            
-            });
+    const value = e.target.value
+    const keyCode = e.which || e.keyCode
+    const ENTER = 13
+    if (keyCode === ENTER) {
+      axios.get(`https://api.github.com/users/${value}`)
+        .then((result) => {
+          this.setState({
+            userInfo: {
+              username: result.data.name,
+              photo: result.data.avatar_url,
+              login: result.data.login,
+              repos: result.data.public_repos,
+              followers: result.data.followers,
+              following: result.data.following,
+            },
+
+          });
+        })
+        .catch((err) => err);
+    }
+  };
+
+  getRepos = (user, type) => {
+    axios.get(`https://api.github.com/users/${user}/${type}`)
+      .then((result) => {
+        this.setState({
+          [type]: result.data.map((repo) => {
+            return {
+              name: repo.name,
+              linl: repo.link
+            }
           })
-          .catch((err) => err);
-      }
-  };
-
-  getRepos = () => {
-
-  };
-
-  getStarred = () => {
-
+        });
+      })
+      .catch((err) => console.log(err));
   };
 
   render() {
+    const user = this.state.userInfo ? this.state.userInfo.login : '';
+    
     return (
       <AppContent
-        userInfo ={this.state.userInfo}
-        repos ={this.state.repos}
-        starred ={this.state.starred}
+        userInfo={this.state.userInfo}
+        repos={this.state.repos}
+        starred={this.state.starred}
         handleSearch={(e) => this.handleSearch(e)}
-        getRepos ={ () => this.getRepos()}
-        getStarred ={ () => this.getStarred()}
+        getRepos={() => this.getRepos(user, 'repos')}
+        getStarred={() => this.getRepos(user, 'starred')}
       />
     );
   }
