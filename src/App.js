@@ -1,26 +1,56 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import AppContent from './components/AppContent';
+import axios from "axios";
 
 class App extends Component {
+
+  state = {
+    userInfo: null,
+    repos: [],
+    starred: [],
+  };
+
+  handleSearch = (e) => {
+      const value = e.target.value
+      const keyCode = e.which || e.keyCode
+      const ENTER = 13
+      if (keyCode === ENTER) {
+        axios.get(`https://api.github.com/users/${value}`)
+          .then((result) => {
+            this.setState({ 
+              userInfo: {
+                username: result.data.name,
+                photo: result.data.avatar_url,
+                login: result.data.login,
+                repos: result.data.public_repos,
+                followers: result.data.followers,
+                following: result.data.following,
+              },
+            
+            });
+          })
+          .catch((err) => err);
+      }
+  };
+
+  getRepos = () => {
+
+  };
+
+  getStarred = () => {
+
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <AppContent
+        userInfo ={this.state.userInfo}
+        repos ={this.state.repos}
+        starred ={this.state.starred}
+        handleSearch={(e) => this.handleSearch(e)}
+        getRepos ={ () => this.getRepos()}
+        getStarred ={ () => this.getStarred()}
+      />
     );
   }
 }
