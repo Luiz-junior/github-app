@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'react-materialize';
 import AppContent from './components/AppContent';
 import api from './services/api';
 
@@ -15,7 +16,6 @@ class App extends Component {
     const keyCode = e.which || e.keyCode
     const ENTER = 13
     if (keyCode === ENTER) {
-    
       api.get(`users/${value}`)
         .then((result) => {
           this.setState({
@@ -31,7 +31,7 @@ class App extends Component {
             starred: []
           });
         })
-        .catch((err) => err);
+        .catch((err) => alert("Nenhum usuário encontrado :'( "));
     }
   };
 
@@ -55,6 +55,7 @@ class App extends Component {
         userInfo={this.state.userInfo}
         repos={this.state.repos}
         starred={this.state.starred}
+        isFetching={this.state.isFetching}
         handleSearch={(e) => this.handleSearch(e)}
         getRepos={() => this.getRepos('repos')}
         getStarred={() => this.getRepos('starred')}

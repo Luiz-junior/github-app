@@ -14,7 +14,7 @@ const AppContent = ({
 }) => (
     <div className="container">
 
-      <Search handleSearch={handleSearch} />
+      <Search handleSe arch={handleSearch} />
       {userInfo && <UserInfo userInfo={userInfo} />}
       {userInfo && <Actions getRepos={getRepos} getStarred={getStarred} />}
 
